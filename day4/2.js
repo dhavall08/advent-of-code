@@ -45,7 +45,7 @@ function getOutput(data) {
 /* -------------------- getOutput - end ------------------------- */
 
 const input = fs.readFileSync(
-  path.resolve(__dirname, "./2_input.txt"),
+  path.resolve(__dirname, "./input.txt"),
   "utf-8"
 );
 
