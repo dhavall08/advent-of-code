@@ -32,7 +32,6 @@ function getOutput(data) {
         }
       }
     }
-    debugger;
 
     return sum + total;
   }, 0);
