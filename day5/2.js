@@ -3,7 +3,7 @@ const path = require("path");
 
 /* -------------------- getOutput - start ------------------------- */
 function getOutput(data) {
-  const [seedLine, ...soils] = data.split("\r\n\r\n");
+  const [seedLine, ...soils] = data.split(/(?:\r?\n){2}/);
   const seeds = seedLine
     .split(": ")[1]
     .trim()
