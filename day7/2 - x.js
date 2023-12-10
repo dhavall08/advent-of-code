@@ -41,7 +41,6 @@ function getOutput(data) {
 
     const jCount = handArray.filter((a) => a === "J").length;
     max += jCount;
-    console.log(hand, max, secondMax);
 
     // AAAAA = 7
     // AAAAB = 6
@@ -100,9 +99,7 @@ function getOutput(data) {
     }
   }
 
-  console.log(same);
   const result = Object.values(same).flat();
-  console.log(result.length);
 
   let sum = 0;
   for (let i = 0; i < result.length; i++) {
@@ -118,6 +115,3 @@ const input = fs.readFileSync(path.resolve(__dirname, "./input.txt"), "utf-8");
 
 const output = getOutput(input);
 console.log("Answer:", output);
-
-
-// correct ans: 249515436
