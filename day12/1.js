@@ -2,6 +2,17 @@ const fs = require("fs");
 const path = require("path");
 // const { nCr } = require("./utils");
 
+function nPr(n, r) {
+  let mul = 1;
+
+  // Calculate the value of n choose r using the binomial coefficient formula
+  for (let i = n; i > n - r; i--) {
+    mul *= i;
+  }
+
+  return mul;
+}
+
 function nCr(n, r) {
   let sum = 1;
 
@@ -44,25 +55,34 @@ function getOutput(Q) {
     let extraDots = S.length - G.length;
     let dotToAdd = totalGdots - totalSdots + extraDots;
 
+    let totalGHash = G.match(/\#/g)?.length || 0;
+    let totalSHash = S.match(/\#/g)?.length || 0;
+    let availableSpace = S.match(/\?/g)?.length || 0;
+    let requiredHash = totalGHash - totalSHash;
+
     let QCount = S.match(/\?/g).length;
-    
+
     QCount;
-    SSSS
+    SSSS;
+    dotToAdd;
+    console.log(SSS, "|", GG);
+    const necessaryDots = GG.length - SSS.length;
+    groupedDots = dotToAdd - necessaryDots;
+    console.log(
+      availableSpace,
+      dotToAdd,
+      "-",
+      necessaryDots,
+      "=",
+      groupedDots,
+      "#:",
+      requiredHash
+    );
 
-    for(let i = 0; i < SSSS.length; i++) {
+    // -1 because of two shouldn't be adjacent
+    const permutations = nPr(availableSpace - 1, requiredHash);
+    console.log("permutations:", permutations);
 
-    }
-
-    /*   for(let i = 0; i < SSS.length; i++) { 
-      if(SSS[i].match(/#/g)){
-        i
-        continue;
-      }
-
-      i
-    } */
-
-    mul = 0;
   } else if (GG.length === SSS.length) {
     SSS.forEach((s, i) => {
       // sLength C gLength
