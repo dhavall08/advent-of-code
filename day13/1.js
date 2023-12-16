@@ -13,7 +13,6 @@ function transpose(a) {
 }
 
 function getOutput(S, horizontal = false) {
-  debugger
   const newArr = S.map((a, i, arr) => {
     const indexes = [];
     arr.forEach((v, j) => {
@@ -24,36 +23,56 @@ function getOutput(S, horizontal = false) {
     return [i, indexes];
   });
 
-  let val = undefined;
+  let valArray = [],
+    matches = [];
   newArr.forEach((v) => {
     v[1].forEach((o) => {
-      if (Math.abs(v[0] - o) === 1) {
-        val = [v[0], o];
+      if (
+        Math.abs(v[0] - o) === 1 &&
+        (valArray.length < 1 ||
+          !valArray.some((foo) => foo === o || foo === v[0]))
+      ) {
+        valArray.push([v[0], o]);
       }
     });
   });
 
-  if (val !== undefined) {
-    const min = Math.min(
-      val[0],
-      val[1],
-      S.length - 1 - val[0],
-      S.length - 1 - val[1]
-    );
+  if (valArray.length > 0) {
+    for (let i = 0; i < valArray.length; i++) {
+      let val = valArray[i];
+      const min = Math.min(
+        val[0],
+        val[1],
+        S.length - 1 - val[0],
+        S.length - 1 - val[1]
+      );
 
-    const countArr = newArr.filter((v) => {
-      return v[1].some((o) => {
-        return v[0] + o === val[0] + val[1];
+      const countArr = newArr.filter((v) => {
+        return v[1].some((o) => {
+          return v[0] + o === val[0] + val[1];
+        });
       });
-    });
 
-    const count = countArr.length;
+      const count = countArr.length;
 
-    if (count === (min + 1) * 2) {
-      return {
-        t: horizontal ? "H" : "V",
-        r: (Math.min(val[0], val[1]) + 1) * (horizontal ? 100 : 1),
-      };
+      if (count === (min + 1) * 2) {
+        matches.push({
+          t: horizontal ? "H" : "V",
+          r: (Math.min(val[0], val[1]) + 1) * (horizontal ? 100 : 1),
+        });
+      }
+    }
+
+    if (matches.length > 0) {
+      let max = 0;
+
+      matches.forEach((each) => {
+        if (each.r > (max?.r || 0)) {
+          max = each;
+        }
+      });
+
+      return max;
     } else if (horizontal === false) {
       return { r: 0, t: "" };
     } else {
@@ -78,17 +97,8 @@ const lines = inputFile.split(/(?:\r?\n){2}/);
 const arr = lines.map((l) => l.split(/(?:\r?\n){1}/));
 arr.forEach((a) => {
   let { t, r } = getOutput(a, true);
-  console.log(r);
-
-  if (t === "H") {
-    const { r: r2 = 0 } = getOutput(transpose(a));
-    console.log(r2)
-    r += r2;
-  }
-
   result += r;
 });
 
 console.log("Answer:", result);
-// wrong - 18182
 // correct answer: 28651
