@@ -6,58 +6,54 @@ const input = fs.readFileSync(path.resolve(__dirname, "./input.txt"), "utf-8");
 const output = getOutput(input.split(/\r?\n/).map((a) => a.split(/ +/)));
 console.log("Answer:", output);
 
+function removeByIndex(list, index) {
+  return [...list.slice(0, index), ...list.slice(index + 1)];
+}
+
 function getOutput(data) {
   let safe = 0;
 
-  outer: for (let i = 0; i < data.length; i++) {
-    let state = null;
-    let count = 0;
-
-    inner: for (let j = 0; j < data[i].length - 1; j++) {
-      let elemDiff;
-      if (j === 0 && count) {
-        elemDiff = Number(data[i][j - count]) - Number(data[i][j + 1]);
-      } else {
-        elemDiff = Number(data[i][j]) - Number(data[i][j + 1 + count]);
-      }
-      elemDiff;
-
-      if (Math.abs(elemDiff) > 3 || elemDiff === 0) {
-        if (!count) {
-          count++;
-          continue inner;
-        } else {
-          continue outer;
+  for (let i = 0; i < data.length; i++) {
+    if (isSafe(data[i])) {
+      safe++;
+    } else {
+      for (let j = 0; j < data[i].length; j++) {
+        const newRow = removeByIndex(data[i], j);
+        if (isSafe(newRow)) {
+          safe++;
+          break;
         }
-      }
-
-      if (elemDiff < 0) {
-        if (state === "decrease") {
-          if (!count) {
-            count++;
-            continue inner;
-          } else {
-            continue outer;
-          }
-        }
-
-        state = "increase";
-      } else {
-        if (state === "increase") {
-          if (!count) {
-            count++;
-            continue inner;
-          } else {
-            continue outer;
-          }
-        }
-
-        state = "decrease";
       }
     }
-
-    safe++;
   }
 
   return safe;
+}
+
+function isSafe(row) {
+  let state = null;
+
+  for (let j = 0; j < row.length - 1; j++) {
+    let elemDiff = Number(row[j]) - Number(row[j + 1]);
+
+    if (Math.abs(elemDiff) > 3 || elemDiff === 0) {
+      return false;
+    }
+
+    if (elemDiff < 0) {
+      if (state === "decrease") {
+        return false;
+      }
+
+      state = "increase";
+    } else {
+      if (state === "increase") {
+        return false;
+      }
+
+      state = "decrease";
+    }
+  }
+
+  return true;
 }
